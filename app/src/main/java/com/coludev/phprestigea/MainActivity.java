@@ -1,13 +1,28 @@
 package com.coludev.phprestigea;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.Firebase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     @Override
@@ -39,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
 }

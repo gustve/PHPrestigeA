@@ -25,7 +25,7 @@ public class FragmentRecibos extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<Recibo> elements;
     RecyclerView recyclerView;
-    ListAdapter adapter;
+    ReciboAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class FragmentRecibos extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         elements = new ArrayList<>();
-        adapter = new ListAdapter(elements, getContext());
+        adapter = new ReciboAdapter(elements, getContext());
         recyclerView.setAdapter(adapter); // Set the adapter immediately
 
         EventChangeListener();

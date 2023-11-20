@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
+public class ReciboAdapter extends RecyclerView.Adapter<ReciboAdapter.ViewHolder> {
 
     private final List<Recibo> mData;
 
     private final Context context;
 
-    public ListAdapter(List<Recibo> mData, Context context) {;
+    public ReciboAdapter(List<Recibo> mData, Context context) {;
         this.mData = mData;
         this.context = context;
     }
@@ -26,13 +26,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         return mData.size();
     }
     @Override
-    public ListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ReciboAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.list_element, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ListAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ReciboAdapter.ViewHolder holder, final int position) {
         holder.id.setText(mData.get(position).getInquilinoID());
         holder.fecha.setText("F.P.: "+mData.get(position).getFechadepago());
         holder.cuotaMant.setText("C.P.: " + mData.get(position).getCuotaPagada());

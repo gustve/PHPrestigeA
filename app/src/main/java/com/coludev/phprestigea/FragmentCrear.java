@@ -1,58 +1,38 @@
 package com.coludev.phprestigea;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentCrear#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class FragmentCrear extends Fragment {
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    List<AptInquilino> inquilinoslist;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public FragmentCrear() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentCrear.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentCrear newInstance(String param1, String param2) {
-        FragmentCrear fragment = new FragmentCrear();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -61,4 +41,44 @@ public class FragmentCrear extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_crear, container, false);
     }
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initAutoCompleteTextView();
+    }
+
+    private void initAutoCompleteTextView() {
+        db.collection("Inquilinos")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            inquilinoslist = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                AptInquilino inquilino = document.toObject(AptInquilino.class);
+                                inquilinoslist.add(inquilino);
+                            }
+                            List<String> elemento = new ArrayList<>();
+                            for (AptInquilino inquilino : inquilinoslist) {
+                                elemento.add(inquilino.getAptId()+" - "+inquilino.getNombreInquilino());
+                            }
+                            // Actualizar el AutoCompleteTextView
+                            actualizarAutoCompleteTextView(elemento);
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
+    }
+
+    private void actualizarAutoCompleteTextView(List<String> elemento) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_dropdown_item_1line, elemento);
+        AutoCompleteTextView editText = getView().findViewById(R.id.actvApt);
+        editText.setAdapter(adapter);
+    }
+
+
 }
